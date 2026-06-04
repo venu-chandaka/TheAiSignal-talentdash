@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  h1 { @apply text-4xl font-bold text-deep-text leading-tight; }
+  h2 { @apply text-[28px] font-bold text-deep-text; }
+  h3 { @apply text-[22px] font-semibold text-deep-text; }
+}
