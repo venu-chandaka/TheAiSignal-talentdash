@@ -1,13 +1,73 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  provider = "prisma-client-js"
 }
-
 datasource db {
   provider = "postgresql"
+}
+
+enum Level {
+  L3
+  L4
+  L5
+  L6
+  SDE_I
+  SDE_II
+  SDE_III
+  STAFF
+  PRINCIPAL
+  IC4
+  IC5
+}
+
+enum Currency {
+  INR
+  USD
+  GBP
+  EUR
+}
+
+enum Source {
+  CONTRIBUTOR
+  SCRAPED
+  AI_INFERRED
+}
+
+model Company {
+  id             String   @id @default(uuid())
+  name           String
+  slug           String   @unique
+  normalizedName String
+  industry       String?
+  headquarters   String?
+  foundedYear    Int?
+  headcountRange String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  salaries       Salary[]
+
+  @@index([normalizedName])
+}
+
+model Salary {
+  id                String   @id @default(uuid())
+  companyId         String
+  company           Company  @relation(fields: [companyId], references: [id])
+  role              String
+  level             Level
+  location          String
+  currency          Currency
+  experienceYears   Int
+  baseSalary        BigInt
+  bonus             BigInt   @default(0)
+  stock             BigInt   @default(0)
+  totalCompensation BigInt
+  source            Source
+  confidenceScore   Decimal  @db.Decimal(3, 2)
+  isVerified        Boolean  @default(false)
+  submittedAt       DateTime @default(now())
+
+  @@index([companyId, level, location])
+  @@index([totalCompensation])
+  @@index([submittedAt])
+  @@index([location, level])
 }
