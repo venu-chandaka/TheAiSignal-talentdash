@@ -10,7 +10,9 @@ import Link from 'next/link'
 
 export async function generateStaticParams() {
   const companies = await prisma.company.findMany({ select: { slug: true } })
-  return companies.map((c) => ({ slug: c.slug }))
+  return companies.map((c: { slug: string }) => ({
+  slug: c.slug,
+}))
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
