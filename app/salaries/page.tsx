@@ -6,8 +6,7 @@ import Pagination from '@/components/ui/Pagination'
 import type { Metadata } from 'next'
 import type { Prisma } from '@/lib/generated/prisma/client'
 
-export const dynamic = 'force-dynamic'
-
+export const revalidate = 300 
 export const metadata: Metadata = {
   title: 'Software Engineer Salaries in India — All Levels & Companies | TalentDash',
   description: 'Browse verified salary data for software engineers across Google, Amazon, Microsoft, Flipkart and more. Filter by level, location, and role.',

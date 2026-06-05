@@ -17,7 +17,7 @@ export default function Navbar() {
               Compare
             </Link>
             <Link
-              href="/api/ingest-salary"
+              href="/submit"
               className="bg-coral text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-[#e54e53] transition-colors"
             >
               Submit Salary

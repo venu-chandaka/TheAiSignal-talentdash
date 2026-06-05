@@ -133,8 +133,9 @@ export async function POST(req: NextRequest) {
   })
 
   // ── Trigger ISR revalidation ───────────────────────
+  // After prisma.salary.create(...)
   revalidatePath('/salaries')
   revalidatePath(`/companies/${company.slug}`)
-
+  revalidatePath('/')
   return NextResponse.json(serializeRecord(salary), { status: 201 })
 }
