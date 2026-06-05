@@ -3,7 +3,7 @@ import { PrismaPg } from '@prisma/adapter-pg'
 import { normalizeCompanyName, slugify } from '../lib/normalize'
 
 const prisma = new PrismaClient({
-  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL ?? '' }),
+  adapter: new PrismaPg({ connectionString: process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? '' }),
 })
 
 const companies = [
