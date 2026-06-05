@@ -4,7 +4,7 @@ import FilterBar from '@/components/features/FilterBar'
 import SalaryRow from '@/components/features/SalaryRow'
 import Pagination from '@/components/ui/Pagination'
 import type { Metadata } from 'next'
-import type { Prisma } from '@/lib/generated/prisma/client'
+import type { Prisma } from '@prisma/client'
 
 export const revalidate = 300 
 export const metadata: Metadata = {

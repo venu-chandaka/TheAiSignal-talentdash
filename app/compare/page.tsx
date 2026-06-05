@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import LevelBadge from '@/components/ui/LevelBadge'
 import { formatINR } from '@/lib/salary'
@@ -10,6 +10,23 @@ interface CompareRecord extends SalaryRow {
 }
 
 export default function ComparePage() {
+  return (
+    <Suspense fallback={<CompareLoading />}>
+      <CompareContent />
+    </Suspense>
+  )
+}
+
+function CompareLoading() {
+  return (
+    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 className="text-[36px] font-bold text-deep-text mb-2">Compare Offers</h1>
+      <p className="text-body-text mb-8">Loading comparison...</p>
+    </main>
+  )
+}
+
+function CompareContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
 
