@@ -3,7 +3,7 @@
 Career intelligence platform for India tech professionals. Structured, level-based salary data built on Next.js 15 + Neon PostgreSQL.
 
 ## Live URL
-https://YOUR-VERCEL-URL.vercel.app
+https://the-ai-signal-talentdash.vercel.app/
 
 ## Tech Stack
 - **Framework**: Next.js 15 (App Router)
@@ -15,7 +15,7 @@ https://YOUR-VERCEL-URL.vercel.app
 ## Run Locally (under 5 minutes)
 
 ### 1. Clone and install
-git clone https://github.com/YOUR_USERNAME/talentdash
+git clone https://github.com/venu-chandaka/TheAiSignal-talentdash
 cd talentdash
 npm install
 
