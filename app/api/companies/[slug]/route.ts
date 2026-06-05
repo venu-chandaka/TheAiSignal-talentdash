@@ -2,20 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { serializeRecord, serializeRecords } from '@/lib/serialize'
 import { computeMedian } from '@/lib/salary'
-import { Prisma } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
 
-type SalaryWithCompany = Prisma.SalaryGetPayload<{
-  include: {
-    company: {
-      select: {
-        name: true
-        slug: true
-      }
-    }
-  }
-}>
+type CompanySalary = {
+  totalCompensation: bigint | number | string
+  level: string
+}
 
 export async function GET(
   _req: NextRequest,
@@ -39,7 +32,7 @@ export async function GET(
     return NextResponse.json({ error: 'Company not found' }, { status: 404 })
   }
 
-  const salaries: SalaryWithCompany[] = company.salaries
+  const salaries = company.salaries as CompanySalary[]
 
   // Compute median total compensation
   const tcValues = salaries.map((s) => Number(s.totalCompensation))

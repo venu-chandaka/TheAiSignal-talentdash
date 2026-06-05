@@ -4,7 +4,6 @@ import FilterBar from '@/components/features/FilterBar'
 import SalaryRow from '@/components/features/SalaryRow'
 import Pagination from '@/components/ui/Pagination'
 import type { Metadata } from 'next'
-import type { Prisma } from '@prisma/client'
 
 export const revalidate = 300 
 export const metadata: Metadata = {
@@ -22,6 +21,18 @@ interface PageProps {
   searchParams: Promise<Record<string, string>>
 }
 
+type TextFilter = { contains: string; mode: 'insensitive' }
+type SalaryWhere = {
+  company?: { name: TextFilter }
+  role?: TextFilter
+  level?: string
+  location?: TextFilter
+}
+type SalaryOrderBy = {
+  totalCompensation?: 'asc' | 'desc'
+  submittedAt?: 'desc'
+}
+
 const LIMIT = 25
 
 export default async function SalariesPage({ searchParams }: PageProps) {
@@ -35,21 +46,22 @@ export default async function SalariesPage({ searchParams }: PageProps) {
   const page      = Math.max(1, parseInt(params.page || '1'))
   const displayCurrency = params.currency || 'INR'
 
-  const where: Prisma.SalaryWhereInput = {}
+  const where: SalaryWhere = {}
   if (company)  where.company  = { name: { contains: company,   mode: 'insensitive' } }
   if (role)     where.role     = { contains: role,     mode: 'insensitive' }
-  if (level)    where.level    = level as any
+  if (level)    where.level    = level
   if (location) where.location = { contains: location, mode: 'insensitive' }
 
-  const orderBy: Prisma.SalaryOrderByWithRelationInput =
+  const orderBy: SalaryOrderBy =
     sort === 'total_comp_asc' ? { totalCompensation: 'asc' }
     : sort === 'date_desc'    ? { submittedAt: 'desc' }
     :                           { totalCompensation: 'desc' }
 
   const [total, rawRecords] = await Promise.all([
-    prisma.salary.count({ where }),
+    prisma.salary.count({ where: where as any }),
     prisma.salary.findMany({
-      where, orderBy,
+      where: where as any,
+      orderBy: orderBy as any,
       skip: (page - 1) * LIMIT,
       take: LIMIT,
       include: { company: { select: { name: true, slug: true } } },

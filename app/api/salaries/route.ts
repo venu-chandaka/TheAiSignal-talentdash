@@ -1,9 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { serializeRecords } from '@/lib/serialize'
-import { Prisma } from '@prisma/client'
 
 export const dynamic = 'force-dynamic'
+
+type TextFilter = { contains: string; mode: 'insensitive' }
+type SalaryWhere = {
+  company?: { name: TextFilter }
+  role?: TextFilter
+  level?: string
+  location?: TextFilter
+  currency?: string
+}
+type SalaryOrderBy = {
+  totalCompensation?: 'asc' | 'desc'
+  submittedAt?: 'desc'
+}
 
 export async function GET(req: NextRequest) {
   const { searchParams } = req.nextUrl
@@ -19,7 +31,7 @@ export async function GET(req: NextRequest) {
   const limit     = Math.min(rawLimit, 100)
 
   // Build where clause
-  const where: Prisma.SalaryWhereInput = {}
+  const where: SalaryWhere = {}
 
   if (company) {
     where.company = {
@@ -30,17 +42,17 @@ export async function GET(req: NextRequest) {
     where.role = { contains: role, mode: 'insensitive' }
   }
   if (level) {
-    where.level = level as any
+    where.level = level
   }
   if (location) {
     where.location = { contains: location, mode: 'insensitive' }
   }
   if (currency) {
-    where.currency = currency as any
+    where.currency = currency
   }
 
   // Build orderBy
-  const orderBy: Prisma.SalaryOrderByWithRelationInput =
+  const orderBy: SalaryOrderBy =
     sort === 'total_comp_asc'
       ? { totalCompensation: 'asc' }
       : sort === 'date_desc'
@@ -48,10 +60,10 @@ export async function GET(req: NextRequest) {
       : { totalCompensation: 'desc' }
 
   const [total, records] = await Promise.all([
-    prisma.salary.count({ where }),
+    prisma.salary.count({ where: where as any }),
     prisma.salary.findMany({
-      where,
-      orderBy,
+      where: where as any,
+      orderBy: orderBy as any,
       skip: (page - 1) * limit,
       take: limit,
       include: {
